@@ -1,0 +1,89 @@
+// This is your Prisma schema file.
+// It defines your database tables (called "models" in Prisma).
+// Each model becomes a table in PostgreSQL.
+
+// ============================================
+// Generator: tells Prisma to generate a JavaScript client
+// so we can do things like: prisma.product.findMany()
+// ============================================
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+// ============================================
+// Datasource: connects to your Supabase PostgreSQL database
+// The URL comes from the DATABASE_URL in your .env file
+// ============================================
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================
+// Product Model
+// ============================================
+// Stores information about each e-commerce product being tracked.
+// One product can be tracked by many users (via TrackedItem).
+// One product has many price history records.
+model Product {
+  id             String   @id @default(uuid())  // Unique ID, auto-generated
+  url            String   @unique               // The e-commerce page URL (must be unique)
+  title          String                          // Product name (scraped from the page)
+  imageUrl       String?                         // Product image URL (nullable — might not always exist)
+  platform       String                          // Which site: "amazon", "flipkart", etc.
+  currentPrice   Float                           // Latest scraped price
+  highestPrice   Float                           // Highest price ever recorded
+  lowestPrice    Float                           // Lowest price ever recorded
+  lastScrapedAt  DateTime @default(now())        // When we last checked the price
+  createdAt      DateTime @default(now())        // When this product was first added
+
+  // --- Relationships ---
+  // A product has many price history entries
+  priceHistory   PriceHistory[]
+  // A product can be tracked by many users
+  trackedBy      TrackedItem[]
+
+  // --- Index for faster lookups by URL ---
+  @@map("products")  // Table name in PostgreSQL will be "products"
+}
+
+// ============================================
+// PriceHistory Model
+// ============================================
+// Stores one price snapshot per scrape.
+// Over time, this builds the data for the price history graph.
+model PriceHistory {
+  id          String   @id @default(uuid())
+  price       Float                              // The price at this point in time
+  recordedAt  DateTime @default(now())           // When this price was recorded
+
+  // --- Relationship: belongs to one Product ---
+  productId   String                             // Foreign key linking to Product
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("price_history")  // Table name in PostgreSQL
+}
+
+// ============================================
+// TrackedItem Model
+// ============================================
+// The "join table" between Users and Products.
+// Stores user-specific settings like target price and alert preferences.
+model TrackedItem {
+  id              String   @id @default(uuid())
+  userId          String                         // User ID from Supabase Auth
+  targetPrice     Float?                         // User's desired price (nullable)
+  alertOnAnyDrop  Boolean  @default(true)        // Email on ANY price drop?
+  isActive        Boolean  @default(true)        // Is this tracking active?
+  createdAt       DateTime @default(now())
+
+  // --- Relationship: belongs to one Product ---
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  // --- Prevent duplicate tracking ---
+  // A user can only track a product once
+  @@unique([userId, productId])
+
+  @@map("tracked_items")  // Table name in PostgreSQL
+}
