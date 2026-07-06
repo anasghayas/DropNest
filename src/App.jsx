@@ -4,16 +4,7 @@ import { LoginForm } from './components/LoginForm'
 import { SignupForm } from './components/SignupForm'
 import { Header } from './components/Header'
 
-function Dashboard() {
-  const user = useAuthStore((state) => state.user)
-  
-  return (
-    <div className="flex flex-col items-center justify-center p-12 space-y-4">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
-      <p>Welcome, {user?.email}!</p>
-    </div>
-  )
-}
+import Dashboard from './components/Dashboard'
 
 function App() {
   useAuth()
