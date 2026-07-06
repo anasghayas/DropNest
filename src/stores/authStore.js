@@ -1,8 +1,3 @@
-// ============================================
-// Zustand Auth Store
-// ============================================
-// Manages: user session, currentPage navigation
-
 import { create } from 'zustand'
 import { supabase } from '../lib/supabase'
 
