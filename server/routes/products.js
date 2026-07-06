@@ -3,7 +3,7 @@ import { prisma } from '../lib/prisma.js'
 import { scrapeProduct } from '../services/scraper.js'
 
 export const productsRouter = express.Router()
-e
+
 productsRouter.post('/', async (req, res) => {
   const { url, userId } = req.body
 
@@ -84,5 +84,24 @@ productsRouter.post('/', async (req, res) => {
   } catch (error) {
     console.error('Error adding product:', error)
     res.status(500).json({ error: 'Failed to process product URL. The scraper might have been blocked.' })
+  }
+})
+// Fetch all products that a specific user is tracking
+productsRouter.get('/user/:userId', async (req, res) => {
+  const { userId } = req.params
+
+  try {
+    const trackedItems = await prisma.trackedItem.findMany({
+      where: { userId, isActive: true },
+      include: {
+        product: true // This joins the product data so we get title, price, image, etc.
+      },
+      orderBy: { createdAt: 'desc' }
+    })
+
+    res.json(trackedItems)
+  } catch (error) {
+    console.error('Error fetching tracked products:', error)
+    res.status(500).json({ error: 'Failed to fetch your tracked products.' })
   }
 })
