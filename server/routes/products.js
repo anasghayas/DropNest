@@ -1,5 +1,88 @@
-// ============================================
-// Product Routes
-// ============================================
-// Handles: POST /api/products/track, GET /api/products/user/:userId
+import express from 'express'
+import { prisma } from '../lib/prisma.js'
+import { scrapeProduct } from '../services/scraper.js'
 
+export const productsRouter = express.Router()
+e
+productsRouter.post('/', async (req, res) => {
+  const { url, userId } = req.body
+
+  if (!url || !userId) {
+    return res.status(400).json({ error: 'URL and userId are required.' })
+  }
+
+  try {
+    // 1. Check if the product already exists in our database
+    let product = await prisma.product.findUnique({
+      where: { url }
+    })
+
+    if (product) {
+      // Product exists. Check if this specific user is already tracking it.
+      const existingTrack = await prisma.trackedItem.findUnique({
+        where: {
+          userId_productId: {
+            userId: userId,
+            productId: product.id
+          }
+        }
+      })
+
+      if (existingTrack) {
+        return res.status(400).json({ error: 'You are already tracking this product.' })
+      }
+
+      // User isn't tracking it yet, so create the connection
+      await prisma.trackedItem.create({
+        data: {
+          userId: userId,
+          productId: product.id
+        }
+      })
+
+      return res.status(200).json({ message: 'Added to your tracking list!', product })
+    }
+
+    // 2. Product does NOT exist. We must scrape it!
+    console.log(`Scraping new product: ${url}`)
+    const scrapedData = await scrapeProduct(url)
+
+    // 3. Save the new product, the initial price history, and the user's tracking link
+    product = await prisma.$transaction(async (tx) => {
+      
+      const newProduct = await tx.product.create({
+        data: {
+          url: url,
+          title: scrapedData.title,
+          imageUrl: scrapedData.imageUrl,
+          platform: scrapedData.platform,
+          currentPrice: scrapedData.currentPrice,
+          highestPrice: scrapedData.currentPrice,
+          lowestPrice: scrapedData.currentPrice,
+        }
+      })
+
+      await tx.priceHistory.create({
+        data: {
+          price: scrapedData.currentPrice,
+          productId: newProduct.id
+        }
+      })
+
+      await tx.trackedItem.create({
+        data: {
+          userId: userId,
+          productId: newProduct.id
+        }
+      })
+
+      return newProduct
+    })
+
+    res.status(201).json({ message: 'Product successfully tracked!', product })
+
+  } catch (error) {
+    console.error('Error adding product:', error)
+    res.status(500).json({ error: 'Failed to process product URL. The scraper might have been blocked.' })
+  }
+})
