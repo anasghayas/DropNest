@@ -19,7 +19,8 @@ export default function PriceChart({ productId }) {
   useEffect(() => {
     async function fetchHistory() {
       try {
-        const response = await fetch(`http://localhost:3001/api/prices/${productId}`)
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+        const response = await fetch(`${API_URL}/api/prices/${productId}`)
         const history = await response.json()
 
         // Format dates for the chart

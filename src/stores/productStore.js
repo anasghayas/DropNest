@@ -8,7 +8,8 @@ export const useProductStore = create((set) => ({
   fetchProducts: async (userId) => {
     set({ isLoading: true, error: null })
     try {
-      const response = await fetch(`http://localhost:3001/api/products/user/${userId}`)
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+      const response = await fetch(`${API_URL}/api/products/user/${userId}`)
       if (!response.ok) throw new Error('Failed to fetch products')
       
       const data = await response.json()
@@ -21,7 +22,8 @@ export const useProductStore = create((set) => ({
   trackProduct: async (url, userId) => {
     set({ isLoading: true, error: null })
     try {
-      const response = await fetch('http://localhost:3001/api/products', {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+      const response = await fetch(`${API_URL}/api/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
