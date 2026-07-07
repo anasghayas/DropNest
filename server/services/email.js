@@ -1,11 +1,5 @@
 import { Resend } from 'resend'
 
-/**
- * Sends a target price alert email to the user
- * @param {string} userEmail - The email address to send the alert to
- * @param {object} product - The product object
- * @param {number} targetPrice - The user's target price
- */
 export async function sendPriceAlertEmail(userEmail, product, targetPrice) {
   const resend = new Resend(process.env.RESEND_API_KEY)
 
