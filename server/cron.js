@@ -1,6 +1,7 @@
 import cron from 'node-cron'
 import { prisma } from './lib/prisma.js'
 import { scrapeProduct } from './services/scraper.js'
+import { sendPriceAlertEmail } from './services/email.js'
 
 // This cron job will run every 6 hours
 export const startCronJobs = () => {
@@ -41,8 +42,8 @@ export const startCronJobs = () => {
           const lowestPrice = Math.min(product.lowestPrice, newPrice)
 
           // 4. Run a transaction to update the Product and insert a new PriceHistory point
-          await prisma.$transaction(async (tx) => {
-            await tx.product.update({
+          const updatedProduct = await prisma.$transaction(async (tx) => {
+            const p = await tx.product.update({
               where: { id: product.id },
               data: {
                 currentPrice: newPrice,
@@ -58,14 +59,31 @@ export const startCronJobs = () => {
                 productId: product.id
               }
             })
+            return p
           })
 
-          console.log(`✅ Updated ${product.title}: new price is ₹${newPrice}`)
-          
-          // TO-DO in Phase 6: Check if this new price is lower than a user's target price
-          // and send them an email alert!
+          console.log(`✅ Updated ${product.title} to ₹${newPrice}`)
 
-          // Pause for 3 seconds between requests to avoid IP bans
+          // 4. Check for Target Price matches and send emails!
+          const usersToAlert = await prisma.trackedItem.findMany({
+            where: {
+              productId: product.id,
+              isActive: true,
+              userEmail: { not: null },
+              targetPrice: { gte: newPrice }
+            }
+          })
+
+          for (const tracking of usersToAlert) {
+            await sendPriceAlertEmail(tracking.userEmail, updatedProduct, tracking.targetPrice)
+            
+            await prisma.trackedItem.update({
+              where: { id: tracking.id },
+              data: { targetPrice: null }
+            })
+          }
+
+          // 5. Be nice to the servers: Wait 3 seconds before scraping the next product
           await new Promise(resolve => setTimeout(resolve, 3000))
 
         } catch (err) {

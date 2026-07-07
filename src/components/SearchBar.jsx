@@ -35,7 +35,7 @@ export default function SearchBar() {
     setErrorMsg('')
     
     try {
-      await trackProduct(data.url, user.id)
+      await trackProduct(data.url, user.id, user.email)
       setSuccessMsg('Product added! Fetching details...')
       reset()
       // Refresh the product list so the new item shows up

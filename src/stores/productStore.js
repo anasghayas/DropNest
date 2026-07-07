@@ -19,7 +19,7 @@ export const useProductStore = create((set) => ({
     }
   },
 
-  trackProduct: async (url, userId) => {
+  trackProduct: async (url, userId, userEmail) => {
     set({ isLoading: true, error: null })
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
@@ -28,7 +28,7 @@ export const useProductStore = create((set) => ({
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ url, userId })
+        body: JSON.stringify({ url, userId, userEmail })
       })
       
       const data = await response.json()

@@ -72,6 +72,7 @@ model PriceHistory {
 model TrackedItem {
   id              String   @id @default(uuid())
   userId          String                         // User ID from Supabase Auth
+  userEmail       String?                        // User Email from Supabase Auth
   targetPrice     Float?                         // User's desired price (nullable)
   alertOnAnyDrop  Boolean  @default(true)        // Email on ANY price drop?
   isActive        Boolean  @default(true)        // Is this tracking active?

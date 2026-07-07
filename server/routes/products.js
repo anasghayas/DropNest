@@ -5,7 +5,7 @@ import { scrapeProduct } from '../services/scraper.js'
 export const productsRouter = express.Router()
 
 productsRouter.post('/', async (req, res) => {
-  const { url, userId } = req.body
+  const { url, userId, userEmail } = req.body
 
   if (!url || !userId) {
     return res.status(400).json({ error: 'URL and userId are required.' })
@@ -36,6 +36,7 @@ productsRouter.post('/', async (req, res) => {
       await prisma.trackedItem.create({
         data: {
           userId: userId,
+          userEmail: userEmail,
           productId: product.id
         }
       })
@@ -72,6 +73,7 @@ productsRouter.post('/', async (req, res) => {
       await tx.trackedItem.create({
         data: {
           userId: userId,
+          userEmail: userEmail,
           productId: newProduct.id
         }
       })
