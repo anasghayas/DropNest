@@ -133,3 +133,23 @@ productsRouter.put('/target-price', async (req, res) => {
     res.status(500).json({ error: 'Failed to update target price.' })
   }
 })
+
+// Stops tracking a product for a specific user
+productsRouter.delete('/user/:userId/:productId', async (req, res) => {
+  const { userId, productId } = req.params
+
+  try {
+    await prisma.trackedItem.delete({
+      where: {
+        userId_productId: {
+          userId: userId,
+          productId: productId
+        }
+      }
+    })
+    res.json({ message: 'Product removed from your tracking list.' })
+  } catch (error) {
+    console.error('Error removing tracked product:', error)
+    res.status(500).json({ error: 'Failed to remove product. It may already be deleted.' })
+  }
+})

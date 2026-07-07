@@ -42,5 +42,20 @@ export const useProductStore = create((set) => ({
       set({ error: err.message, isLoading: false })
       throw err
     }
+  },
+
+  removeProduct: async (productId, userId) => {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+      const response = await fetch(`${API_URL}/api/products/user/${userId}/${productId}`, {
+        method: 'DELETE'
+      })
+      if (!response.ok) throw new Error('Failed to remove product')
+      set((state) => ({
+        products: state.products.filter(item => item.productId !== productId)
+      }))
+    } catch (err) {
+      console.error(err)
+    }
   }
 }))

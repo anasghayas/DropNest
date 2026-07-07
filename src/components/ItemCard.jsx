@@ -1,14 +1,26 @@
 import { useState } from 'react'
 import { Card, CardContent } from './ui/card'
 import { Button } from './ui/button'
-import { LineChart, ExternalLink, TrendingDown, TrendingUp, Bell } from 'lucide-react'
+import { LineChart, ExternalLink, TrendingDown, TrendingUp, Bell, Trash2, Loader2 } from 'lucide-react'
 import PriceChart from './PriceChart'
 import TargetPriceForm from './TargetPriceForm'
+import { useAuthStore } from '../stores/authStore'
+import { useProductStore } from '../stores/productStore'
 
 export default function ItemCard({ item }) {
   const [showChart, setShowChart] = useState(false)
   const [showTargetModal, setShowTargetModal] = useState(false)
+  const [isRemoving, setIsRemoving] = useState(false)
   const product = item.product
+  const user = useAuthStore((state) => state.user)
+  const removeProduct = useProductStore((state) => state.removeProduct)
+
+  const handleRemove = async () => {
+    if (!window.confirm("Are you sure you want to stop tracking this product?")) return
+    setIsRemoving(true)
+    await removeProduct(product.id, user.id)
+    // setIsRemoving(false) is not needed because the component will unmount when removed
+  }
 
   // Format the date
   const lastScraped = new Date(product.lastScrapedAt).toLocaleDateString('en-US', {
@@ -44,15 +56,25 @@ export default function ItemCard({ item }) {
               <h3 className="font-semibold text-gray-800 line-clamp-2 leading-tight">
                 {product.title}
               </h3>
-              <a 
-                href={product.url} 
-                target="_blank" 
-                rel="noreferrer"
-                className="text-gray-400 hover:text-primary transition-colors shrink-0 mt-1"
-                title="View on Store"
-              >
-                <ExternalLink size={18} />
-              </a>
+              <div className="flex items-center gap-3 shrink-0 mt-1">
+                <a 
+                  href={product.url} 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="text-gray-400 hover:text-primary transition-colors"
+                  title="View on Store"
+                >
+                  <ExternalLink size={18} />
+                </a>
+                <button 
+                  onClick={handleRemove}
+                  disabled={isRemoving}
+                  className="text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
+                  title="Remove from Dashboard"
+                >
+                  {isRemoving ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                </button>
+              </div>
             </div>
             <div className="mt-2 flex items-center gap-2 text-xs font-medium">
               <span className="px-2 py-1 bg-gray-100 text-gray-600 rounded-md capitalize">
