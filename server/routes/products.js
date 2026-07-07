@@ -105,3 +105,31 @@ productsRouter.get('/user/:userId', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch your tracked products.' })
   }
 })
+
+// Updates the target price for a specific user's tracked item
+productsRouter.put('/target-price', async (req, res) => {
+  const { userId, productId, targetPrice } = req.body
+
+  if (!userId || !productId || targetPrice === undefined) {
+    return res.status(400).json({ error: 'userId, productId, and targetPrice are required.' })
+  }
+
+  try {
+    const updatedTrackedItem = await prisma.trackedItem.update({
+      where: {
+        userId_productId: {
+          userId: userId,
+          productId: productId
+        }
+      },
+      data: {
+        targetPrice: targetPrice
+      }
+    })
+
+    res.json({ message: 'Target price updated successfully', trackedItem: updatedTrackedItem })
+  } catch (error) {
+    console.error('Error updating target price:', error)
+    res.status(500).json({ error: 'Failed to update target price.' })
+  }
+})
