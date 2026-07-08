@@ -1,4 +1,4 @@
-# DropNest 🦅
+# DropNest 
 
 DropNest is a modern, full-stack E-commerce Price Tracker. It allows users to paste product links from platforms like Amazon, track their price history over time, and set custom target price alerts to save money.
 
