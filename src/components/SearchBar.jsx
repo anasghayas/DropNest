@@ -48,7 +48,7 @@ export default function SearchBar() {
 
   return (
     <div className="w-full max-w-2xl mx-auto mb-10">
-      <form onSubmit={handleSubmit(onSubmit)} className="relative flex items-center shadow-lg rounded-xl overflow-hidden bg-white/70 backdrop-blur-sm border border-gray-100">
+      <form onSubmit={handleSubmit(onSubmit)} className="relative flex items-center shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-xl overflow-hidden bg-gray-900/60 backdrop-blur-md border border-gray-700/50">
         <div className="pl-4 text-gray-400">
           <Search size={20} />
         </div>
@@ -57,7 +57,7 @@ export default function SearchBar() {
           {...register('url')}
           type="url"
           placeholder="Paste an Amazon or Flipkart URL here..."
-          className="border-0 bg-transparent h-14 focus-visible:ring-0 focus-visible:ring-offset-0 text-lg flex-1"
+          className="border-0 bg-transparent! h-14 focus-visible:ring-0 focus-visible:ring-offset-0 text-lg flex-1 text-white placeholder:text-gray-500"
           disabled={isLoading}
         />
         
@@ -65,7 +65,7 @@ export default function SearchBar() {
           <Button 
             type="submit" 
             disabled={isLoading}
-            className="h-10 px-6 font-semibold"
+            className="h-10 px-6 font-semibold bg-linear-to-r from-rose-500 to-red-600 hover:from-rose-400 hover:to-red-500 text-white shadow-lg shadow-red-500/25 border-0"
           >
             {isLoading ? <Loader2 className="animate-spin" /> : 'Track'}
           </Button>
@@ -74,9 +74,9 @@ export default function SearchBar() {
 
       {/* Error & Success Messages */}
       <div className="mt-2 h-6 text-center text-sm font-medium">
-        {errors.url && <p className="text-red-500">{errors.url.message}</p>}
-        {errorMsg && <p className="text-red-500">{errorMsg}</p>}
-        {successMsg && <p className="text-green-600">{successMsg}</p>}
+        {errors.url && <p className="text-red-400">{errors.url.message}</p>}
+        {errorMsg && <p className="text-red-400">{errorMsg}</p>}
+        {successMsg && <p className="text-green-400">{successMsg}</p>}
       </div>
     </div>
   )
