@@ -69,7 +69,7 @@ export default function PriceChart({ productId }) {
   const padding = (maxPrice - minPrice) * 0.1 || maxPrice * 0.1
 
   return (
-    <Card className="w-full p-4 bg-white shadow-sm border-gray-100 overflow-hidden">
+    <Card className="w-full p-4 bg-card shadow-sm border-border overflow-hidden">
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
@@ -79,7 +79,7 @@ export default function PriceChart({ productId }) {
                 <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
             <XAxis 
               dataKey="date" 
               axisLine={false}
@@ -96,18 +96,18 @@ export default function PriceChart({ productId }) {
               width={60}
             />
             <Tooltip 
-              contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-              itemStyle={{ color: 'var(--primary)', fontWeight: 'bold' }}
+              contentStyle={{ borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--card-foreground))', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
+              itemStyle={{ color: 'hsl(var(--primary))', fontWeight: 'bold' }}
               formatter={(value) => [`₹${value.toLocaleString()}`, 'Price']}
             />
             <Area 
               type="monotone" 
               dataKey="price" 
-              stroke="var(--primary)" 
+              stroke="hsl(var(--primary))" 
               strokeWidth={3}
               fillOpacity={1} 
               fill="url(#colorPrice)" 
-              activeDot={{ r: 6, strokeWidth: 0, fill: 'var(--primary)' }}
+              activeDot={{ r: 6, strokeWidth: 0, fill: 'hsl(var(--primary))' }}
             />
           </AreaChart>
         </ResponsiveContainer>

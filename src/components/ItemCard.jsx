@@ -6,6 +6,7 @@ import PriceChart from './PriceChart'
 import TargetPriceForm from './TargetPriceForm'
 import { useAuthStore } from '../stores/authStore'
 import { useProductStore } from '../stores/productStore'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
 
 export default function ItemCard({ item }) {
   const [showChart, setShowChart] = useState(false)
@@ -108,10 +109,10 @@ export default function ItemCard({ item }) {
                 variant="outline" 
                 size="sm"
                 className="text-xs border-gray-700 bg-gray-800/50 hover:bg-gray-700 text-gray-200"
-                onClick={() => setShowChart(!showChart)}
+                onClick={() => setShowChart(true)}
               >
                 <LineChart size={14} className="mr-2 text-[#A6C8FF]" />
-                {showChart ? 'Hide History' : 'Price History'}
+                Price History
               </Button>
               <Button 
                 variant={item.targetPrice ? "default" : "secondary"}
@@ -127,16 +128,17 @@ export default function ItemCard({ item }) {
         </div>
       </div>
 
-      {/* Expandable Chart Section */}
-      <div 
-        className={`bg-gray-950/50 transition-all duration-500 ease-in-out overflow-hidden border-t border-gray-800 ${
-          showChart ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-        }`}
-      >
-        <div className="p-4">
-          <PriceChart productId={product.id} />
-        </div>
-      </div>
+      {/* Chart Modal */}
+      <Dialog open={showChart} onOpenChange={setShowChart}>
+        <DialogContent className="sm:max-w-2xl bg-gray-900 border-gray-800 text-gray-100">
+          <DialogHeader>
+            <DialogTitle>Price History: {product.title}</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <PriceChart productId={product.id} />
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <TargetPriceForm 
         isOpen={showTargetModal} 
