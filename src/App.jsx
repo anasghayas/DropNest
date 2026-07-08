@@ -13,7 +13,7 @@ function App() {
   const currentPage = useAuthStore((state) => state.currentPage)
 
   return (
-    <div className="dark min-h-screen relative bg-[#0A29FF] text-white">
+    <div className="dark min-h-screen relative bg-[#03091F] text-white">
       {/* Lightfall Background */}
       <div className="fixed top-0 left-0 w-[100vw] h-[100lvh] z-0 pointer-events-none">
         <Lightfall
