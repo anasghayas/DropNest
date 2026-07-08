@@ -17,15 +17,19 @@ import {
 import { useAuthStore } from '../stores/authStore'
 import { useProductStore } from '../stores/productStore'
 
-const targetSchema = z.object({
-  targetPrice: z.number({ invalid_type_error: "Must be a number" }).positive("Price must be greater than 0")
-})
-
 export default function TargetPriceForm({ isOpen, onClose, item }) {
   const user = useAuthStore((state) => state.user)
   const fetchProducts = useProductStore((state) => state.fetchProducts)
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+
+  const currentPrice = item.product.currentPrice
+
+  const targetSchema = z.object({
+    targetPrice: z.number({ invalid_type_error: "Must be a number" })
+      .positive("Price must be greater than 0")
+      .lt(currentPrice, `Target price must be lower than current price (₹${currentPrice.toLocaleString()})`)
+  })
 
   const {
     register,
@@ -34,7 +38,7 @@ export default function TargetPriceForm({ isOpen, onClose, item }) {
   } = useForm({
     resolver: zodResolver(targetSchema),
     defaultValues: {
-      targetPrice: item.targetPrice || item.product.currentPrice
+      targetPrice: item.targetPrice || (currentPrice > 1 ? currentPrice - 1 : 1)
     }
   })
 
