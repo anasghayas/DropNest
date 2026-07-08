@@ -6,9 +6,9 @@ export const cronRouter = express.Router()
 cronRouter.get('/trigger', async (req, res) => {
   const secret = req.query.secret
   
-  const CRON_SECRET = process.env.CRON_SECRET || 'dropnest_default_secret_123'
+  const CRON_SECRET = process.env.CRON_SECRET
   
-  if (secret !== CRON_SECRET) {
+  if (!CRON_SECRET || secret !== CRON_SECRET) {
     return res.status(401).json({ error: 'Unauthorized. Invalid cron secret.' })
   }
 
