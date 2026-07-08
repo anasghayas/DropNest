@@ -1,4 +1,4 @@
-# DropNest 🦅
+# DropNest 
 
 **🔴 Live Demo:** [https://drop-nest-three.vercel.app/](https://drop-nest-three.vercel.app/)
 
