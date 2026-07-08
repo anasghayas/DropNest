@@ -72,6 +72,35 @@ export default function TargetPriceForm({ isOpen, onClose, item }) {
     }
   }
 
+  const handleRemoveTarget = async () => {
+    setLoading(true)
+    setErrorMsg('')
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || ''
+      const response = await fetch(`${API_URL}/api/products/target-price`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          productId: item.product.id,
+          targetPrice: null
+        })
+      })
+
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.error || 'Failed to remove target price')
+
+      await fetchProducts(user.id)
+      onClose()
+    } catch (err) {
+      setErrorMsg(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose() }}>
       <DialogContent className="sm:max-w-md">
@@ -104,14 +133,23 @@ export default function TargetPriceForm({ isOpen, onClose, item }) {
 
           {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
 
-          <div className="flex justify-end gap-3 pt-2">
-            <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
-              Save Target
-            </Button>
+          <div className="flex justify-between pt-2">
+            <div>
+              {item.targetPrice && (
+                <Button type="button" variant="destructive" onClick={handleRemoveTarget} disabled={loading}>
+                  Remove Target
+                </Button>
+              )}
+            </div>
+            <div className="flex gap-3">
+              <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
+                Save Target
+              </Button>
+            </div>
           </div>
         </form>
       </DialogContent>
