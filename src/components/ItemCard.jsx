@@ -34,7 +34,7 @@ export default function ItemCard({ item }) {
   const isHighest = product.currentPrice >= product.highestPrice
 
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:-translate-y-1 bg-gray-900/60 backdrop-blur-md border-gray-700/50 text-gray-100">
+    <Card className="overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.5)] hover:-translate-y-1 bg-gray-900/90 sm:bg-gray-900/60 backdrop-blur-none sm:backdrop-blur-md border-gray-700/50 text-gray-100">
       <div className="p-4 flex flex-col md:flex-row gap-4">
         {/* Product Image */}
         <div className="w-full md:w-32 h-32 shrink-0 bg-white/10 rounded-xl flex items-center justify-center p-2 shadow-sm border border-gray-700/50">

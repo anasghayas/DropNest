@@ -53,7 +53,7 @@ export default function Dashboard() {
             ))}
           </div>
         ) : ( 
-          <div className="text-center py-20 bg-gray-900/40 backdrop-blur-sm rounded-2xl border border-dashed border-gray-700">
+          <div className="text-center py-20 bg-gray-900/90 sm:bg-gray-900/40 backdrop-blur-none sm:backdrop-blur-sm rounded-2xl border border-dashed border-gray-700">
             <h3 className="text-xl font-semibold text-gray-300 mb-2">No items tracked yet</h3>
             <p className="text-gray-400">Paste a URL above to start tracking your first product!</p>
           </div>

@@ -42,7 +42,7 @@ export default function TargetPriceForm({ isOpen, onClose, item }) {
     setLoading(true)
     setErrorMsg('')
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+      const API_URL = import.meta.env.VITE_API_URL || ''
       const response = await fetch(`${API_URL}/api/products/target-price`, {
         method: 'PUT',
         headers: {

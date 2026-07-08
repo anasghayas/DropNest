@@ -8,7 +8,7 @@ export const useProductStore = create((set) => ({
   fetchProducts: async (userId) => {
     set({ isLoading: true, error: null })
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+      const API_URL = import.meta.env.VITE_API_URL || ''
       const response = await fetch(`${API_URL}/api/products/user/${userId}`)
       if (!response.ok) throw new Error('Failed to fetch products')
       
@@ -22,7 +22,7 @@ export const useProductStore = create((set) => ({
   trackProduct: async (url, userId, userEmail) => {
     set({ isLoading: true, error: null })
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+      const API_URL = import.meta.env.VITE_API_URL || ''
       const response = await fetch(`${API_URL}/api/products`, {
         method: 'POST',
         headers: {
@@ -46,7 +46,7 @@ export const useProductStore = create((set) => ({
 
   removeProduct: async (productId, userId) => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+      const API_URL = import.meta.env.VITE_API_URL || ''
       const response = await fetch(`${API_URL}/api/products/user/${userId}/${productId}`, {
         method: 'DELETE'
       })

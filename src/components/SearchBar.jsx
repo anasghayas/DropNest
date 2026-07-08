@@ -48,7 +48,7 @@ export default function SearchBar() {
 
   return (
     <div className="w-full max-w-2xl mx-auto mb-10">
-      <form onSubmit={handleSubmit(onSubmit)} className="relative flex items-center shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-xl overflow-hidden bg-gray-900/60 backdrop-blur-md border border-gray-700/50">
+      <form onSubmit={handleSubmit(onSubmit)} className="relative flex items-center shadow-[0_8px_30px_rgb(0,0,0,0.5)] rounded-xl overflow-hidden bg-gray-900/90 sm:bg-gray-900/60 backdrop-blur-none sm:backdrop-blur-md border border-gray-700/50">
         <div className="pl-4 text-gray-400">
           <Search size={20} />
         </div>
@@ -56,7 +56,7 @@ export default function SearchBar() {
         <Input
           {...register('url')}
           type="url"
-          placeholder="Paste an Amazon or Flipkart URL here..."
+          placeholder="Paste URL here..."
           className="border-0 bg-transparent! h-14 focus-visible:ring-0 focus-visible:ring-offset-0 text-lg flex-1 text-white placeholder:text-gray-500"
           disabled={isLoading}
         />

@@ -17,6 +17,7 @@ function App() {
       {/* Lightfall Background */}
       <div className="absolute inset-0 z-0">
         <Lightfall
+          dpr={1}
           colors={['#A6C8FF', '#5227FF', '#FF9FFC']}
           backgroundColor="#0A29FF"
           speed={0.4}
