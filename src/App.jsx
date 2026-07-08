@@ -13,9 +13,9 @@ function App() {
   const currentPage = useAuthStore((state) => state.currentPage)
 
   return (
-    <div className="dark min-h-screen relative overflow-hidden bg-[#0A29FF] text-white">
+    <div className="dark min-h-screen relative bg-[#0A29FF] text-white">
       {/* Lightfall Background */}
-      <div className="absolute inset-0 z-0">
+      <div className="fixed top-0 left-0 w-[100vw] h-[100lvh] z-0 pointer-events-none">
         <Lightfall
           dpr={1}
           colors={['#A6C8FF', '#5227FF', '#FF9FFC']}

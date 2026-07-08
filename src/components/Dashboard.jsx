@@ -47,7 +47,7 @@ export default function Dashboard() {
             ))}
           </div>
         ) : products.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
             {products.map((item) => (
               <ItemCard key={item.id} item={item} />
             ))}

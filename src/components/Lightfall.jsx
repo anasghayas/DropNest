@@ -256,11 +256,18 @@ const Lightfall = ({
 
     const resize = () => {
       const rect = container.getBoundingClientRect();
-      renderer.setSize(rect.width, rect.height);
-      uniforms.iResolution.value = [gl.drawingBufferWidth, gl.drawingBufferHeight, 1];
+      // Only resize if the width difference is more than 20px (ignores scrollbar toggles)
+      if (Math.abs(gl.canvas.width - rect.width) > 20 || Math.abs(gl.canvas.height - rect.height) > 20) {
+        renderer.setSize(rect.width, rect.height);
+        uniforms.iResolution.value = [gl.drawingBufferWidth, gl.drawingBufferHeight, 1];
+      }
     };
 
-    resize();
+    // Force initial size without condition
+    const rect = container.getBoundingClientRect();
+    renderer.setSize(rect.width, rect.height);
+    uniforms.iResolution.value = [gl.drawingBufferWidth, gl.drawingBufferHeight, 1];
+
     const ro = new ResizeObserver(resize);
     ro.observe(container);
 
