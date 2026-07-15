@@ -31,6 +31,10 @@ export default function Dashboard() {
 
       <SearchBar />
 
+      <div className="mt-[-1.5rem] mb-10 bg-amber-900/30 border border-amber-700/50 text-amber-200/90 px-4 py-3 rounded-xl text-sm text-center max-w-2xl mx-auto backdrop-blur-sm">
+        <strong>Note:</strong> Automated email alerts are currently disabled for this demo.
+      </div>
+
       {/* Products Grid */}
       <div className="mt-8">
         <div className="flex items-center justify-between mb-6">
