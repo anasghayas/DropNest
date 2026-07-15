@@ -1,6 +1,7 @@
 # DropNest 
 
-**🔴 Live Demo:** [https://drop-nest-three.vercel.app/](https://drop-nest-three.vercel.app/)
+**🔴 Live Demo:** [https://drop-nest-three.vercel.app/](https://drop-nest-three.vercel.app/)  
+*(Note: Automated email alerts are currently disabled on the demo instance due to domain verification requirements)*
 
 DropNest is a modern, full-stack E-commerce Price Tracker. It allows users to paste product links from platforms like Amazon, track their price history over time, and set custom target price alerts to save money.
 
